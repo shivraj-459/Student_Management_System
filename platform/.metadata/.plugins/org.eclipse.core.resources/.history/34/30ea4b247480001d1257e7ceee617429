@@ -1,0 +1,14 @@
+package com.commons.service;
+
+import com.commons.DTO.AdminDTO;
+import com.commons.exception.AdminException;
+import com.commons.exception.ValidationException;
+import com.commons.model.Admin;
+
+public interface AdminService {
+	
+	
+	public AdminDTO addAdmin(Admin admin) throws AdminException,ValidationException;
+	
+ 
+}

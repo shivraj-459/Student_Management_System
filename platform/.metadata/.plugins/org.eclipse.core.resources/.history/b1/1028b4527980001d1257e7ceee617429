@@ -1,0 +1,42 @@
+package com.commons.service;
+
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.commons.DTO.AdminDTO;
+import com.commons.exception.AdminException;
+import com.commons.exception.ValidationException;
+import com.commons.model.Admin;
+import com.commons.repository.AdminRepository;
+
+@Service
+public class AdminServiceImpl implements AdminService{
+
+	@Autowired
+	private AdminRepository adminRepository;
+	
+	
+	@Override
+	public AdminDTO addAdmin(Admin admin) throws AdminException, ValidationException {
+		
+		Optional<Admin> optional= adminRepository.findByUsername(admin.getUsername());
+		
+		if(optional.isPresent()) {
+			
+			throw new AdminException("admin already registered with this username");
+		}
+		
+		Admin savedAdmin= adminRepository.save(admin);
+		
+		AdminDTO adminDTO=new AdminDTO();
+		
+		adminDTO.setAdminId(savedAdmin.getAdminId());
+		adminDTO.setAdminUserName(savedAdmin.getUsername());
+		
+		
+		return adminDTO;
+	}
+
+}

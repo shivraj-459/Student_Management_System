@@ -1,0 +1,19 @@
+package com.commons.repository;
+
+import java.util.List;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
+
+import com.commons.model.Student;
+
+@Repository
+public interface StudentRepository extends JpaRepository<Student,Integer>{
+
+	@Query("select s from Student s where s.email=?1 AND s.mobileNumber=?2")
+	public Student findByEmailAndMobileNumber(String email,String mobileNumber);
+	
+	@Query("select s from Student s where s.studentName like '%:studentName%'")
+	public List<Student> findByStudentName(String studentName);
+}

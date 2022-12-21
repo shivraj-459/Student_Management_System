@@ -1,0 +1,183 @@
+package com.commons.service;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.commons.DTO.AdminDTO;
+import com.commons.DTO.StudentOutputDTO;
+import com.commons.exception.AdminException;
+import com.commons.exception.CourseException;
+import com.commons.exception.LoginException;
+import com.commons.exception.StudentException;
+import com.commons.exception.ValidationException;
+import com.commons.model.Admin;
+import com.commons.model.Course;
+import com.commons.model.CurrentAdminLogin;
+import com.commons.model.Student;
+import com.commons.repository.AdminLoginRepository;
+import com.commons.repository.AdminRepository;
+import com.commons.repository.CourseRepository;
+import com.commons.repository.StudentRepository;
+
+@Service
+public class AdminServiceImpl implements AdminService{
+
+	@Autowired
+	private AdminRepository adminRepository;
+	
+	@Autowired
+	private StudentRepository studentRepository;
+	
+	@Autowired
+	private AdminLoginRepository adminLoginRepository;
+	
+	@Autowired
+	private CourseRepository courseRepository;
+	
+	@Override
+	public AdminDTO addAdmin(Admin admin) throws AdminException, ValidationException {
+		
+		Optional<Admin> optional= adminRepository.findByUsername(admin.getUsername());
+		
+		if(optional.isPresent()) {
+			
+			throw new AdminException("admin already registered with this username");
+		}
+		
+		Admin savedAdmin= adminRepository.save(admin);
+		
+		AdminDTO adminDTO=new AdminDTO();
+		
+		adminDTO.setAdminId(savedAdmin.getAdminId());
+		adminDTO.setAdminUserName(savedAdmin.getUsername());
+		
+		
+		return adminDTO;
+	}
+
+
+	@Override
+	public StudentOutputDTO addStudent(Student student, String uuid)
+			throws StudentException, AdminException, LoginException {
+		
+		 CurrentAdminLogin adminLogin= adminLoginRepository.findByUuid(uuid);
+		 
+		 if(adminLogin==null) {
+			 
+			 throw new LoginException("Admin does not logged in with "+uuid);
+			 
+		 }
+		 
+		 
+		
+		Student existedStudent= studentRepository.findByEmailAndMobileNumber(student.getEmail(),student.getMobileNumber());
+		
+		if(existedStudent!=null) {
+			
+			throw new StudentException("Student already exist with given email and mobile number");
+		}
+		
+		Student addedStudent= studentRepository.save(student);
+		
+		StudentOutputDTO studentOutputDTO=new StudentOutputDTO();
+		studentOutputDTO.setDOB(addedStudent.getDOB());
+		studentOutputDTO.setEmail(addedStudent.getEmail());
+		studentOutputDTO.setGender(addedStudent.getGender());
+		studentOutputDTO.setMobileNumber(addedStudent.getMobileNumber());
+		studentOutputDTO.setStudentCode(addedStudent.getStudentCode());
+		studentOutputDTO.setStudentName(addedStudent.getStudentName());
+		studentOutputDTO.setParentName(addedStudent.getParentName());
+		
+		
+		return studentOutputDTO;
+	}
+
+
+	@Override
+	public List<StudentOutputDTO> getStudentByName(String name, String uuid) throws StudentException, LoginException {
+		
+		
+        CurrentAdminLogin adminLogin= adminLoginRepository.findByUuid(uuid);
+		 
+		 if(adminLogin==null) {
+			 
+			 throw new LoginException("Admin does not logged in with "+uuid);
+			 
+		 }
+		 
+		 
+		List<Student> students= studentRepository.findByStudentName(name);
+		
+		if(students.size()==0) {
+			
+			throw new StudentException("record not found..!");
+		}
+		
+		List<StudentOutputDTO> outputDTOs=new ArrayList<>();
+		
+		for(Student s:students) {
+			
+			StudentOutputDTO studentOutputDTO=new StudentOutputDTO();
+			
+			BeanUtils.copyProperties(s, studentOutputDTO);
+			
+			outputDTOs.add(studentOutputDTO);
+		}
+		
+		return outputDTOs;
+		
+		
+	}
+
+
+	@Override
+	public List<StudentOutputDTO> getStudentByCourse(Integer courseId, String uuid)
+			throws CourseException, StudentException, LoginException {
+
+
+		  CurrentAdminLogin adminLogin= adminLoginRepository.findByUuid(uuid);
+			 
+			 if(adminLogin==null) {
+				 
+				 throw new LoginException("Admin does not logged in with "+uuid);
+				 
+			 }
+			 
+			 
+			Optional<Course> optional=  courseRepository.findById(courseId);
+			
+			if(!optional.isPresent()) {
+				
+				throw new CourseException("course does not found with id "+courseId);
+			}
+			
+			
+			Course course= optional.get();
+			
+			List<Student> students=course.getStudents();
+			
+			if(students.size()==0) {
+				
+				throw new StudentException("No student enrolled in this course");
+			}
+			
+			List<StudentOutputDTO> outputDTOs=new ArrayList<>();
+			
+			for(Student s:students) {
+				
+				StudentOutputDTO studentOutputDTO=new StudentOutputDTO();
+				
+				BeanUtils.copyProperties(s, studentOutputDTO);
+				outputDTOs.add(studentOutputDTO);
+			}
+ 		
+		return outputDTOs;
+	}
+
+}

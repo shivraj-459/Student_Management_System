@@ -1,0 +1,65 @@
+package com.commons.controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.commons.DTO.StudentAddressDTO;
+import com.commons.DTO.StudentCourse;
+import com.commons.DTO.StudentInputDTO;
+import com.commons.DTO.StudentOutputDTO;
+import com.commons.exception.CourseException;
+import com.commons.exception.StudentException;
+import com.commons.service.StudentService;
+
+@RestController
+public class StudentController {
+
+	@Autowired
+	private StudentService service;
+	
+	@PatchMapping("/updatestudentmailandmobile")
+	public ResponseEntity<StudentOutputDTO> updateEmailAndMobileHandler(@RequestBody StudentInputDTO studentInputDTO) throws StudentException{
+		
+	   StudentOutputDTO studentOutputDTO=	service.updateEmailAndMobile(studentInputDTO);
+		
+	   return new ResponseEntity<StudentOutputDTO>(studentOutputDTO, HttpStatus.OK);
+	}
+	
+	
+	@PatchMapping("/studentaddress")
+	public ResponseEntity<StudentOutputDTO> updateAddressHandler(@RequestBody StudentAddressDTO studentAddressDTO) throws StudentException{
+		
+	   StudentOutputDTO studentOutputDTO=	service.updateStudentAddress(studentAddressDTO);
+		
+	   return new ResponseEntity<StudentOutputDTO>(studentOutputDTO, HttpStatus.OK);
+	}
+	
+	
+	@GetMapping("/studentcourses/{studentid}")
+	public ResponseEntity<StudentCourse> getStudentCoursesHandler(@PathVariable("studentid") Integer StudentId) throws StudentException{
+		
+		StudentCourse studentCourse= service.getStudentCourses(StudentId);
+		
+		return new ResponseEntity<StudentCourse>(studentCourse,HttpStatus.OK);
+		
+	}
+	
+	@DeleteMapping("/student/{studentId}/{courseId}")
+	public ResponseEntity<StudentCourse> leaveCourse(@PathVariable("studentId") Integer studentId,@PathVariable("courseId") Integer courseId) throws StudentException, CourseException{
+		
+	  StudentCourse studentCourse=	service.leaveCourse(studentId, courseId);
+		
+	  
+	  return new ResponseEntity<StudentCourse>(studentCourse, HttpStatus.OK);
+	}
+	
+	
+	
+}

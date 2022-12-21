@@ -1,0 +1,119 @@
+package com.commons.model;
+
+import java.util.Objects;
+
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+
+@Entity
+public class Address {
+	
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	private Integer addressId;
+	
+	@NotNull @NotBlank @NotEmpty
+	private String area;
+	
+	@NotNull @NotBlank @NotEmpty
+	private String state;
+	
+	@NotNull @NotBlank @NotEmpty
+	private String district;
+	
+	@NotNull @NotBlank @NotEmpty
+	private String pincode;
+	
+	@Enumerated(EnumType.STRING)
+	private AddressType type;
+
+	public Integer getAddressId() {
+		return addressId;
+	}
+
+	public void setAddressId(Integer addressId) {
+		this.addressId = addressId;
+	}
+
+	public String getArea() {
+		return area;
+	}
+
+	public void setArea(String area) {
+		this.area = area;
+	}
+
+	public String getState() {
+		return state;
+	}
+
+	public void setState(String state) {
+		this.state = state;
+	}
+
+	public String getDistrict() {
+		return district;
+	}
+
+	public void setDistrict(String district) {
+		this.district = district;
+	}
+
+	public String getPincode() {
+		return pincode;
+	}
+
+	public void setPincode(String pincode) {
+		this.pincode = pincode;
+	}
+
+	public AddressType getType() {
+		return type;
+	}
+
+	public void setType(AddressType type) {
+		this.type = type;
+	}
+
+	public Address(String area, String state, String district, String pincode, AddressType type) {
+		super();
+		this.area = area;
+		this.state = state;
+		this.district = district;
+		this.pincode = pincode;
+		this.type = type;
+	}
+	
+	
+	
+	public Address() {
+		
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(type);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Address other = (Address) obj;
+		return type == other.type;
+	}
+	
+	
+
+}

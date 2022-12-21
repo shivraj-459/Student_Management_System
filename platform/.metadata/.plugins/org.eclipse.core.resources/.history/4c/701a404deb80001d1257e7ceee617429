@@ -1,0 +1,14 @@
+package com.commons.DTO;
+
+import lombok.Data;
+
+@Data
+public class StudentCourse {
+	
+	
+	private Integer StudentId;
+	private String name;
+	
+	private List<CourseDTO> courses = new ArrayList<>();
+
+}

@@ -1,0 +1,15 @@
+package com.commons.service;
+
+import com.commons.DTO.CourseDTO;
+import com.commons.exception.CourseException;
+import com.commons.exception.LoginException;
+import com.commons.exception.StudentException;
+
+public interface CourseService {
+	
+	
+	public CourseDTO addCourse(CourseDTO courseDTO,String uuid) throws LoginException,CourseException;
+	
+	public CourseDTO assignCoursesToStudent(Integer courseId,Integer StudentId,String uuid) throws StudentException,LoginException,CourseException;
+
+}

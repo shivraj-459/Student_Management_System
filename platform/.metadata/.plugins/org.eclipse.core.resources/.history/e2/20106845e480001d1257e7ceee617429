@@ -1,0 +1,23 @@
+package com.commons.service;
+
+import com.commons.DTO.CourseOutputDTO;
+import com.commons.DTO.StudentAddressDTO;
+import com.commons.DTO.StudentInputDTO;
+import com.commons.DTO.StudentOutputDTO;
+import com.commons.exception.CourseException;
+import com.commons.exception.StudentException;
+
+public interface StudentService {
+	
+	
+    public StudentOutputDTO updateEmailAndMobile(StudentInputDTO dto) throws StudentException;
+	
+	public StudentOutputDTO updateStudentAddress(StudentAddressDTO addressDTO) throws StudentException;
+	
+	public CourseOutputDTO getStudentCourses(Integer studentId,String dateOfBirth) throws StudentException;
+	
+	public CourseOutputDTO leaveCourse(Integer studentId,String dateOfBirth,Integer courseId) throws StudentException, CourseException;
+
+	
+	public StudentDTO addNewAddress(StudentAddressDTO addressDTO) throws StudentException;
+}

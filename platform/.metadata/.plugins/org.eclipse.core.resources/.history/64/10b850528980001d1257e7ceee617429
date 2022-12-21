@@ -1,0 +1,36 @@
+package com.commons.DTO;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.persistence.Embedded;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+
+import com.commons.model.CourseType;
+
+import lombok.Data;
+
+
+public class CourseDTO {
+
+
+	private Integer courseId;
+	
+	private String courseName;
+	
+	private String description;
+	
+	private String duration;
+	
+	@Enumerated(EnumType.STRING)
+	private CourseType type;
+	
+	@Embedded
+	private List<String> topics=new ArrayList<>();
+	
+	
+	
+	
+	
+}

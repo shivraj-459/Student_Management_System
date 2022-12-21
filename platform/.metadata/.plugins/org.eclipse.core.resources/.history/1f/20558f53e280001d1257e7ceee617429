@@ -1,0 +1,5 @@
+package com.commons.service;
+
+public class StudentServiceImpl {
+
+}

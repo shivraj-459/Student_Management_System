@@ -1,0 +1,38 @@
+package com.commons.controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.commons.DTO.StudentAddressDTO;
+import com.commons.DTO.StudentInputDTO;
+import com.commons.DTO.StudentOutputDTO;
+import com.commons.exception.StudentException;
+import com.commons.service.StudentService;
+
+@RestController
+public class StudentController {
+
+	@Autowired
+	private StudentService service;
+	
+	@PatchMapping("/updatestudentmailandmobile")
+	public ResponseEntity<StudentOutputDTO> updateEmailAndMobileHandler(@RequestBody StudentInputDTO studentInputDTO) throws StudentException{
+		
+	   StudentOutputDTO studentOutputDTO=	service.updateEmailAndMobile(studentInputDTO);
+		
+	   return new ResponseEntity<StudentOutputDTO>(studentOutputDTO, HttpStatus.OK);
+	}
+	
+	
+	@PatchMapping("/studentaddress")
+	public ResponseEntity<StudentOutputDTO> updateAddressHandler(@RequestBody StudentAddressDTO studentAddressDTO) throws StudentException{
+		
+	   StudentOutputDTO studentOutputDTO=	service.updateStudentAddress(studentAddressDTO)
+		
+	   return new ResponseEntity<StudentOutputDTO>(studentOutputDTO, HttpStatus.OK);
+	}
+}

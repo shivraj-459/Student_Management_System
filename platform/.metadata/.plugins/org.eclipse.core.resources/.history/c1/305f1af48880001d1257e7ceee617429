@@ -1,0 +1,5 @@
+package com.commons.service;
+
+public interface CourseService {
+
+}

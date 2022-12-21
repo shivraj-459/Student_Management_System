@@ -1,0 +1,5 @@
+package com.commons.exception;
+
+public class CourseException {
+
+}

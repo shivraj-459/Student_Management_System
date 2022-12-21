@@ -1,0 +1,70 @@
+package com.commons.service;
+
+import java.util.Optional;
+
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.commons.DTO.CourseDTO;
+import com.commons.DTO.CourseOutputDTO;
+import com.commons.exception.CourseException;
+import com.commons.exception.LoginException;
+import com.commons.exception.StudentException;
+import com.commons.model.Course;
+import com.commons.model.CurrentAdminLogin;
+import com.commons.repository.AdminLoginRepository;
+import com.commons.repository.CourseRepository;
+import com.commons.repository.StudentRepository;
+
+@Service
+public class CourseServiceImpl implements CourseService{
+
+	@Autowired
+	private AdminLoginRepository adminLoginRepository;
+	
+	@Autowired
+	private CourseRepository courseRepository;
+	
+	@Autowired
+	private StudentRepository studentRepository;
+	
+	@Override
+	public CourseOutputDTO addCourse(CourseDTO courseDTO, String uuid) throws LoginException, CourseException {
+		
+		
+		CurrentAdminLogin currentAdminLogin= adminLoginRepository.findByUuid(uuid);
+		
+		if(currentAdminLogin==null) {
+			
+			throw new LoginException("admin does not loggedin...!");
+		}
+		
+	   Optional<Course> optional=courseRepository.findByCourseNameAndTypeAndDuration(courseDTO.getCourseName(),courseDTO.getType(),courseDTO.getDuration());
+		
+	   if(optional.isPresent()) {
+		   
+		  throw new CourseException("course already registered...!");
+	   }
+	   
+	   Course course=new Course();
+	   
+	   BeanUtils.copyProperties(courseDTO,course);
+	   
+	  Course addedCourse= courseRepository.save(course);
+	   
+	  CourseOutputDTO courseOutputDTO=new CourseOutputDTO();
+	  
+	  BeanUtils.copyProperties(addedCourse,courseOutputDTO);
+	   
+		return courseOutputDTO;
+	}
+
+	@Override
+	public CourseOutputDTO assignCoursesToStudent(Integer courseId, Integer StudentId, String uuid)
+			throws StudentException, LoginException, CourseException {
+		
+		return null;
+	}
+
+}

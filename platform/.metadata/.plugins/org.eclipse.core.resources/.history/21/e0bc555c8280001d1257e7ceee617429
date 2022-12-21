@@ -1,0 +1,46 @@
+package com.commons.controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.commons.DTO.AdminDTO;
+import com.commons.DTO.StudentOutputDTO;
+import com.commons.exception.AdminException;
+import com.commons.exception.LoginException;
+import com.commons.exception.StudentException;
+import com.commons.exception.ValidationException;
+import com.commons.model.Admin;
+import com.commons.model.Student;
+import com.commons.service.AdminService;
+
+@RestController
+public class AdminController {
+
+	@Autowired
+	private AdminService adminService;
+	
+	@PostMapping("/admins")
+	public ResponseEntity<AdminDTO> addAdminHandler(@RequestBody Admin admin) throws AdminException, ValidationException{
+		
+		AdminDTO adminDTO= adminService.addAdmin(admin);
+		
+		return new ResponseEntity<AdminDTO>(adminDTO, HttpStatus.OK);
+		
+	}
+	
+	@PostMapping("/addstudents/{adminuuid}")
+	public ResponseEntity<StudentOutputDTO> addStudentHandler(@RequestBody Student student,@PathVariable("adminuuid") String uuid) throws StudentException, AdminException, LoginException{
+		
+		
+		StudentOutputDTO studentOutputDTO= adminService.addStudent(student, uuid);
+		
+		return new ResponseEntity<StudentOutputDTO>(studentOutputDTO,HttpStatus.OK);
+		
+	}
+	
+}

@@ -1,0 +1,5 @@
+package com.commons.controller;
+
+public class StudentController {
+
+}
